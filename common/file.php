@@ -33,11 +33,15 @@ class file {
         file_put_contents ($fileName , $text);
     }
     
-    public function savePdfFile(string $text = '') :string //TODO randomName
+    public function savePdfFile(string $text = '') :string
     {
+        $params = require(__DIR__ . '/../config/params.php');
+        $pdfParams = isset($params['pdf'])?$params['pdf']:[];
         $mpdf = new \Mpdf\Mpdf();
         $fileName = './../files/'.md5(time()).'.pdf';
-        $mpdf->SetProtection(array('print'), 'IntellectPL!', 'IntellectPL!'); //TODO przenieść do zmiennej/konfiga
+        $permitions = isset($pdfParams['permitions'])?$pdfParams['permitions']:array('print');
+        $password = isset($pdfParams['password'])?$pdfParams['password']:'';
+        $mpdf->SetProtection($permitions, $password, $password);
         $mpdf->WriteHTML($text);
         $this->directoryPath($fileName);
         $mpdf->Output($fileName, \Mpdf\Output\Destination::FILE);

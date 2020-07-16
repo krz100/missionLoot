@@ -12,18 +12,23 @@ class mailer {
     private $connect;
     
     function __construct() {
+        $params = require(__DIR__ . '/../config/params.php');
+        $mailerParams = isset($params['mailer'])?$params['mailer']:[];
+        
         // Instantiation and passing `true` enables exceptions
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_OFF;                      // Enable verbose debug output
         $mail->isSMTP();                                            // Send using SMTP
-        $mail->Host       = 'smtp.mailtrap.io';                    // Set the SMTP server to send through
+        $mail->Host       = isset($mailerParams['host'])?$mailerParams['host']:'smtp.mailtrap.io';                    // Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-        $mail->Username   = '637ed9e41ce265';                     // SMTP username
-        $mail->Password   = 'a81489b397504a';                               // SMTP password
+        $mail->Username   = isset($mailerParams['userName'])?$mailerParams['userName']:'637ed9e41ce265';                     // SMTP username
+        $mail->Password   = isset($mailerParams['password'])?$mailerParams['password']:'a81489b397504a';                               // SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-        $mail->Port       = 2525;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+        $mail->Port       = isset($mailerParams['port'])?$mailerParams['port']:2525;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
         $mail->CharSet    = "UTF-8";
+        
+        $mail->setFrom(isset($mailerParams['fromMail'])?$mailerParams['fromMail']:'poslaniec@kdz.com', isset($mailerParams['fromName'])?$mailerParams['fromName']:'Posłaniec');
         $this->connect    = $mail;
     }
     
@@ -40,7 +45,6 @@ class mailer {
         }
         try {
             //Recipients
-            $this->connect->setFrom('poslaniec@kdz.com', 'Posłaniec');
             $this->connect->addAddress($email, 'Gracz_1');
 
             // Attachments
