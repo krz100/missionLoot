@@ -36,7 +36,7 @@ class mailer {
     
     public function sendMail($email, $fileName) {
         if(!$this->validatedEmail($email)) {
-            throw new Exception("Posłaniec nie wie do kogo ma dostarczyć przesyłkę. Twój adres nie leży w tej krainie :{$email}", 422);
+            throw new Exception("Posłaniec zabłądził z twoją przesyłką. Twój adres nie leży w tej krainie :{$email}", 400);
         }
         try {
             //Recipients
@@ -55,7 +55,7 @@ class mailer {
             $this->connect->send();
             return 'Posłaniec wyruszył w droge z twoimi łupami.';
         } catch (Exception $e) {
-            throw new Exception("Posłaniec nie mógł wyruszyć. Jego wymówka: {$this->connect->ErrorInfo}", 422);
+            throw new Exception("Posłaniec nie mógł wyruszyć. Jego wymówka: {$this->connect->ErrorInfo}", 500);
         }
     }
 }

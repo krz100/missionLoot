@@ -34,9 +34,6 @@ class MissionController {
         $input = [];
         $input['numberOfLoot'] = filter_input(INPUT_GET, 'numberOfLoot', FILTER_SANITIZE_NUMBER_INT);
         $input['address'] = filter_input(INPUT_GET, 'address', FILTER_SANITIZE_STRING);
-        if (! $this->validateMission($input)) {
-            return $this->unprocessableEntityResponse();
-        }
         return $input;
     }
 
@@ -44,6 +41,9 @@ class MissionController {
     {
         try {
             $input = $this->getData();
+            if (!$this->validateMission($input)) {
+                return $this->unprocessableEntityResponse();
+            }
             //wygenerowanie kodów
             $generator = new \generateCode();
             $list = $generator->generateCodes(0, $input['numberOfLoot']);
@@ -69,10 +69,10 @@ class MissionController {
 
     private function validateMission(array $input) :bool
     {
-        if (! isset($input['numberOfLoot'])) {
+        if (! isset($input['numberOfLoot']) || !$input['numberOfLoot']) {
             return false;
         }
-        if (! isset($input['address'])) {
+        if (! isset($input['address']) || !$input['address']) {
             return false;
         }
         return true;
@@ -82,7 +82,7 @@ class MissionController {
     {
         $response['status_code_header'] = 'HTTP/1.1 422 Unprocessable Entity';
         $response['body'] = json_encode([
-            'error' => 'Invalid input'
+            'error' => 'Założenia misji nie są ustalone. Prosze podać "numberOfLoot" i "address"'
         ]);
         return $response;
     }
