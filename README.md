@@ -22,6 +22,9 @@ Jedyna forma komunikacji z aplikacją odbywa się poprzez REST API lub konsolę.
 
 ## Set your Config
 
+- in file
+
+``` config/params.php ```
 
 ## Example
 
