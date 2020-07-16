@@ -12,9 +12,11 @@ Jedyna forma komunikacji z aplikacją odbywa się poprzez REST API lub konsolę.
 
 ## QUICK INSTALL:
 
-- Get project
+- Get repo
 
-```composer create-project  krz100/missionLoot:dev-master [my-app-name]```
+- Update composer
+
+```composer update```
 
 - Start server
 
